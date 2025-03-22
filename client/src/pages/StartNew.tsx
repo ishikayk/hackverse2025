@@ -43,7 +43,10 @@ const StartNew: React.FC = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      navigate('/roadmap');
+      const data = await response.json();
+      console.log('API Response:', data);
+      
+      navigate('/roadmap', { state: { responseData: data } });
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Failed to submit form. Please try again.');
@@ -80,8 +83,8 @@ const StartNew: React.FC = () => {
             className="w-full px-5 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             required
           >
-            <option>Beginner</option>
             <option>Intermediate</option>
+            <option>Beginner</option>
             <option>Advanced</option>
           </select>
         </div>

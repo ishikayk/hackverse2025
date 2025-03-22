@@ -23,9 +23,6 @@ app.post('/generate-roadmap', (req, res) => {
     result += data.toString();
   });
 
-  console.log("Re");
-  
-
   pythonProcess.stderr.on('data', (data) => {
     error += data.toString();
   });

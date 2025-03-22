@@ -24,10 +24,10 @@ const HomePage: React.FC = () => {
       {/* Content */}
       <div className="text-center text-white relative z-10 max-w-7xl px-4">
         <h1 className="text-7xl font-bold mb-10">
-          Welcome to Our Project
+          Welcome to <span className="">CertiFi</span>
         </h1>
-        <p className="text-xl mb-8">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos culpa, commodi optio voluptas veritatis dolor velit neque doloremque repudiandae, laudantium aliquid. Laborum fuga cum autem beatae eum modi sed similique?
+        <p className="text-xl mb-8 ">
+         Learn your way, Earn your way. Turn your goals into Achievements with your very own custom learning plan. Then, turn your achievements into earnings by validating your knowledge. Powered by EDU Chain
         </p>
         <button
           onClick={handleStart}

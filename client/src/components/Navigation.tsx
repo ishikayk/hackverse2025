@@ -19,7 +19,7 @@ const Navigation: React.FC = () => {
     <nav className="sticky top-0 bg-white shadow-md z-50">
       <div className="mx-0 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex flex-shrink-0">
+          <div className="flex  align-center flex-shrink-0">
             <NavLink to="/" className="text-xl font-bold text-blue-600">
               BlockSentinels
             </NavLink>
