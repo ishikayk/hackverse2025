@@ -17,14 +17,14 @@ const HomePage: React.FC = () => {
     >
 
       <div
-        className="absolute inset-0 bg-gradient-to-l from-sky-400/70 to-indigo-500/60"
+        className="absolute inset-0 bg-gradient-to-b from-slate-900/90 to-indigo-900/80"
         aria-hidden="true"
       />
 
       {/* Content */}
       <div className="text-center text-white relative z-10 max-w-7xl px-4">
         <h1 className="text-7xl font-bold mb-10">
-          Welcome to <span className="">CertiFi</span>
+          Welcome to <span className="bg-gradient-to-br from-rose-500 to-pink-400 text-gradient">CertiFi</span>
         </h1>
         <p className="text-xl mb-8 ">
          Learn your way, Earn your way. Turn your goals into Achievements with your very own custom learning plan. Then, turn your achievements into earnings by validating your knowledge. Powered by EDU Chain

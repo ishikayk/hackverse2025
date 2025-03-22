@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { IconMessage, IconSend, IconHome, IconSettings, IconUser, IconLogout } from "@tabler/icons-react";
+import { IconMessage, IconSend, IconLogout } from "@tabler/icons-react";
 
 const ChatPage: React.FC = () => {
   const location = useLocation();

@@ -89,11 +89,11 @@ const RoadmapPage: React.FC<RoadmapPageProps> = ({heading}) => {
     <div className="w-screen h-screen flex">
       <div className="fixed top-25 w-full bg-zinc-100 z-40">
         <h2 className="text-4xl font-bold text-center py-4">
-          Your Personalized {`${heading}`} Roadmap
+          Your Personalized {`Cybersecurity`} Roadmap
         </h2>
         <button
           onClick={() => navigate('/chat', { state: { roadmap: roadmapData } })}
-          className="bg-gradient-to-l from-green-400 to-cyan-500 hover:bg-purple-600 text-white px-4 py-2 h-[24rem] rounded-lg font-medium transition-colors fixed top-24 flex items-center gap-2"
+          className="bg-gradient-to-br from-rose-500 to-pink-400 hover:bg-gradient-to-br hover:from-rose-700 hover:to-pink-600 text-white px-4 py-2 w-[8rem] ml-[2rem] rounded-lg font-medium transition-colors fixed top-24"
         >
           Ask a Doubt
           <IconSparkles size={20} />
@@ -103,7 +103,15 @@ const RoadmapPage: React.FC<RoadmapPageProps> = ({heading}) => {
       {/* Scrollable Roadmap */}
       <div className="flex-1 overflow-y-auto mt-20 pt-4 pl-8">
         <Roadmap topics={topicsWithIcons} />
+
+        <button
+          onClick={() => {navigate("/quiz", { state: { roadmapData } })}}
+          className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto"
+        >
+          Take Final Quiz
+        </button>
       </div>
+
 
       {/* Progress Section */}
       <div className="w-1/3 fixed top-24 right-0 h-screen pt-8 pr-8">

@@ -31,7 +31,6 @@ const StartNew: React.FC = () => {
     };
 
     try {
-      // Send the data to the API
       const response = await fetch('http://localhost:8080/generate-roadmap', {
         method: 'POST',
         headers: {
@@ -52,7 +51,7 @@ const StartNew: React.FC = () => {
       console.error('Error submitting form:', error);
       alert('Failed to submit form. Please try again.');
     } finally {
-      setLoading(false); // Hide loading screen after response
+      setLoading(false); 
     }
   };
 

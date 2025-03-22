@@ -12,17 +12,6 @@ Content-Type: application/json
   "studyTime": "18:00"
 }
 
-### Test the /generate-roadmap endpoint with invalid data
-POST http://localhost:8080/generate-roadmap
-Content-Type: application/json
-
-{
-  "topic": "",
-  "timeCommitment": "",
-  "studyDays": "",
-  "studyTime": ""
-}
-
 ### Test ask-chatbot endpoint
 POST http://localhost:8080/ask-chatbot
 Content-Type: application/json
@@ -72,4 +61,68 @@ Content-Type: application/json
 
 {
   "question": "What is the first topic in the roadmap?"
+}
+
+### Fetch Quiz Questions (Requires Roadmap)
+POST http://localhost:8080/generate-quiz
+Content-Type: application/json
+
+{
+  "roadmap": [
+    {
+      "id": 1,
+      "title": "Python Basics",
+      "resources": [
+        {
+          "id": "1",
+          "title": "Introduction to Python",
+          "type": "Video",
+          "duration": "10:00",
+          "icon": null
+        },
+        {
+          "id": "2",
+          "title": "Python Syntax",
+          "type": "Written",
+          "duration": "15:00",
+          "icon": null
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Data Structures",
+      "resources": [
+        {
+          "id": "3",
+          "title": "Lists and Tuples",
+          "type": "Video",
+          "duration": "12:00",
+          "icon": null
+        },
+        {
+          "id": "4",
+          "title": "Dictionaries and Sets",
+          "type": "Written",
+          "duration": "20:00",
+          "icon": null
+        }
+      ]
+    }
+  ]
+}
+
+### 2. Submit Quiz Answers
+POST http://localhost:8080/check-answers
+Content-Type: application/json
+
+{
+  "expected": [
+    { "id": 1, "answer": "int, float, str" },
+    { "id": 2, "answer": "Paris" }
+  ],
+  "user": [
+    { "id": 1, "answer": "int, float, str" },
+    { "id": 2, "answer": "London" }
+  ]
 }
