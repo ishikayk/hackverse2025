@@ -1,0 +1,18 @@
+(await contract.balanceOf("0x9f736DBEc3F51A945E437AE9A9b00D2bC2CD416b")).toString();
+(await contract.balanceOf("(await contract.balanceOf("0x9f736DBEc3F51A945E437AE9A9b00D2bC2CD416b")).toString(); 
+(await contract.balanceOf(userAddress)).toString();
+console.log(userAddress);
+const userAddress = signers[0].address;  
+const signers = await ethers.getSigners();
+signers[0].'0xf3e5FCc5772b95efB98B0F12423152897EDADaAd';
+const userAddress = signers[0].'0xf3e5FCc5772b95efB98B0F12423152897EDADaAd'
+const signers = await ethers.getSigners();
+(await contract.balanceOf("0xYourWalletAddress")).toString()
+(await contract.totalSupply()).toString();
+const contract = await ethers.getContractAt("EduChainToken", "0xf8A0361D410dBF656B3351FAdcd506aB2b67e293");
+(await ethers.provider.getBalance(signers[0].address)).toString()
+signers[0].address
+const signers = await ethers.getSigners();
+npx hardhat console --network educhain
+(await ethers.provider.listAccounts())[0]
+(await ethers.provider.getBalance("0xYourWalletAddress")).toString()

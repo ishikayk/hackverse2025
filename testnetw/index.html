@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduChain Token System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css"> <!-- CSS for styling -->
+    <link rel="icon" href="data:,">
+
+</head>
+<body>
+    <h1>EduChain Token Rewards</h1>
+
+    <!-- Wallet Connection -->
+    <button id="connectWallet" onclick="connectWallet()">Connect Wallet</button>
+    <p id="walletAddress">Wallet: Not Connected</p>
+
+    <!-- Check Balance -->
+    <button id="checkBalance" onclick="checkBalance()">Check My Tokens</button>
+    <p id="balanceDisplay">Your balance: 0 EDU</p>
+
+    <!-- Claim Rewards -->
+    <input type="text" id="rewardAmount" placeholder="Enter reward amount">
+    <button id="claimRewards" onclick="claimRewards()">Claim Rewards</button>
+    <p id="rewardMessage"></p>
+
+    <script src="app.js"></script> <!-- External JavaScript -->
+</body>
+</html>
