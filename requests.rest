@@ -1,0 +1,24 @@
+### Test the /check endpoint
+GET http://localhost:8080/check
+
+### Test the /generate-roadmap endpoint
+POST http://localhost:8080/generate-roadmap
+Content-Type: application/json
+
+{
+  "topic": "Python",
+  "timeCommitment": "10",
+  "studyDays": "5",
+  "studyTime": "18:00"
+}
+
+### Test the /generate-roadmap endpoint with invalid data
+POST http://localhost:8080/generate-roadmap
+Content-Type: application/json
+
+{
+  "topic": "",
+  "timeCommitment": "",
+  "studyDays": "",
+  "studyTime": ""
+}

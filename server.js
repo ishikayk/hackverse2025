@@ -13,7 +13,8 @@ app.use(bodyParser.json());
 app.post('/generate-roadmap', (req, res) => {
   const formData = req.body;
   const pythonProcess = spawn('python3', ['generate.py', JSON.stringify(formData)]);
-
+  console.log("It actually manages to run the script");
+  
   let result = '';
   let error = '';
 
