@@ -10,6 +10,7 @@ const StartNew: React.FC = () => {
   const [timeCommitment, setTimeCommitment] = useState<number | ''>('');
   const [studyDays, setStudyDays] = useState<number | ''>('');
   const [studyTime, setStudyTime] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
 
   const learningStyleOptions: string[] = [
     'Video tutorials',
@@ -20,6 +21,7 @@ const StartNew: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Show loading screen
 
     // Prepare the data to send to the API
     const formData = {
@@ -45,16 +47,25 @@ const StartNew: React.FC = () => {
 
       const data = await response.json();
       console.log('API Response:', data);
-      
+
       navigate('/roadmap', { state: { responseData: data } });
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Failed to submit form. Please try again.');
+    } finally {
+      setLoading(false); // Hide loading screen after response
     }
   };
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full my-16">
+    <div className="bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full my-16 relative">
+      {loading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-80 z-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 mb-4"></div>
+          <p className="text-lg font-semibold text-gray-700">Generating Your Learning Path...</p>
+        </div>
+      )}
+
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Let's Personalize Your Learning Journey
       </h2>
@@ -158,9 +169,16 @@ const StartNew: React.FC = () => {
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+          disabled={loading}
         >
-          <span className="text-lg">Generate My Learning Path</span>
-          <IconChevronRight size={24} />
+          {loading ? (
+            <span className="text-lg">Generating...</span>
+          ) : (
+            <>
+              <span className="text-lg">Generate My Learning Path</span>
+              <IconChevronRight size={24} />
+            </>
+          )}
         </button>
       </form>
     </div>
