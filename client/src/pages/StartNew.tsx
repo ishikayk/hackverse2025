@@ -7,11 +7,9 @@ const StartNew: React.FC = () => {
 
   // State to store form data
   const [topic, setTopic] = useState<string>('');
-  const [skillLevel, setSkillLevel] = useState<string>('Beginner');
   const [timeCommitment, setTimeCommitment] = useState<number | ''>('');
   const [studyDays, setStudyDays] = useState<number | ''>('');
   const [studyTime, setStudyTime] = useState<string>('');
-  const [learningStyles, setLearningStyles] = useState<string[]>([]);
 
   const learningStyleOptions: string[] = [
     'Video tutorials',
@@ -26,11 +24,9 @@ const StartNew: React.FC = () => {
     // Prepare the data to send to the API
     const formData = {
       topic,
-      skillLevel,
       timeCommitment,
       studyDays,
       studyTime,
-      learningStyles,
     };
 
     try {
@@ -47,21 +43,11 @@ const StartNew: React.FC = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      // Navigate to the roadmap page after successful submission
       navigate('/roadmap');
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Failed to submit form. Please try again.');
     }
-  };
-
-  // Handle checkbox changes for learning styles
-  const handleLearningStyleChange = (style: string) => {
-    setLearningStyles((prev) =>
-      prev.includes(style)
-        ? prev.filter((item) => item !== style) // Uncheck
-        : [...prev, style] // Check
-    );
   };
 
   return (
@@ -91,8 +77,6 @@ const StartNew: React.FC = () => {
             Your current skill level
           </label>
           <select
-            value={skillLevel}
-            onChange={(e) => setSkillLevel(e.target.value)}
             className="w-full px-5 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             required
           >
@@ -159,8 +143,6 @@ const StartNew: React.FC = () => {
               >
                 <input
                   type="checkbox"
-                  checked={learningStyles.includes(style)}
-                  onChange={() => handleLearningStyleChange(style)}
                   className="rounded text-blue-500 focus:ring-blue-500 size-4"
                 />
                 <span className="text-gray-700">{style}</span>

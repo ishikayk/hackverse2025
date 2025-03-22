@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { spawn } = require('child_process');
+const { log } = require('console');
 
 const app = express();
 const port = 8080;
@@ -13,7 +14,7 @@ app.use(bodyParser.json());
 app.post('/generate-roadmap', (req, res) => {
   const formData = req.body;
   const pythonProcess = spawn('python3', ['generate.py', JSON.stringify(formData)]);
-  console.log("It actually manages to run the script");
+  console.log("Script is running...");
   
   let result = '';
   let error = '';
@@ -21,6 +22,9 @@ app.post('/generate-roadmap', (req, res) => {
   pythonProcess.stdout.on('data', (data) => {
     result += data.toString();
   });
+
+  console.log("Re");
+  
 
   pythonProcess.stderr.on('data', (data) => {
     error += data.toString();

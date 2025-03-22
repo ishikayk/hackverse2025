@@ -12,10 +12,6 @@ from dotenv import load_dotenv
 load_dotenv('.env.local')
 
 GEMINI_API_KEY = os.getenv('VITE_API_KEY')
-print(GEMINI_API_KEY)
-
-# Replace with your actual API key for Gemini
-GEMINI_API_KEY = "AIzaSyBrCCGmiDmZ3I1mAEynCDsto1-ILDxqjHo"
 
 # Google Calendar API scopes
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
@@ -62,21 +58,19 @@ def generate_roadmap(topic, timeCommitment, studyDays):
     # Create a prompt for the API
     prompt = f"""
     Create a comprehensive and structured learning roadmap for mastering {topic}. The user can dedicate {hours_per_day} hours per day, {studyDays} days per week to learning. The roadmap should be engaging, practical, and easy to follow—designed in a way that avoids overwhelming the learner while ensuring they cover everything necessary to gain true proficiency.
-    
+
     **Constraints:**
     - The course must last between 6 to 8 weeks.
     - The total study hours must be between {int(timeCommitment) * 6} and {int(timeCommitment) * 8} hours.
-    - Under "Topics & Concepts" and "Practical Application," list each topic or task with a '-' at the beginning (e.g., "- Variables, data types").
-    
-    If valid, the roadmap should include:
-    - **Phases of Learning:** Break the journey into progressive phases (e.g., Foundation, Hands-on Practice, Mastery). Explain what the learner should focus on at each phase.
-    - **Topics & Concepts:** Cover every key aspect of {topic} in a logical sequence, ensuring no critical topics are skipped while keeping the structure easy to digest. Each topic must start with '-'.
-    - **Practical Application:** Suggest exercises, projects, or real-world applications at each stage to reinforce learning. Each task must start with '-'.
-    - **Learning Methodology:** Describe the best way to approach learning each section—whether it’s through visualization, problem-solving, hands-on work, or real-world examples.
-    - **Review & Mastery:** Include checkpoints or mini-assessments to test knowledge and refine skills before moving forward. Offer revision strategies to ensure retention.
-    - **Resources & Guidance:** Recommend types of resources (books, online courses, tools, or communities) that would be helpful at different stages.
-    
-    The final roadmap should feel structured yet flexible, keeping the learner motivated and making the process feel achievable. Avoid overwhelming the learner with excessive details while ensuring depth where necessary. Present the roadmap in a step-by-step format that feels natural and engaging.
+    - 
+        **Output Format:**
+        - Each topic should have a title and a list of resources.
+        - Resources should include a title, type (e.g., Video, Written, Exercises, Project), and duration.
+        - Example:
+        Title: <Topic Title>
+            Resources:
+                <Resource Title> (Type: <Resource Type>, Duration: <Duration>)
+                <Resource Title> (Type: <Resource Type>, Duration: <Duration>)
     """
     
     try:
@@ -95,41 +89,42 @@ def parse_roadmap(roadmap):
     """
     Parse the roadmap into structured data.
     """
-    phases = []
-    current_phase = None
+    topics = []
+    current_topic = None
 
     for line in roadmap.split("\n"):
-        # Detect phase titles
-        if line.strip().endswith(":"):
-            if current_phase:
-                phases.append(current_phase)
-            current_phase = {
-                "id": len(phases) + 1,
-                "title": line.strip().rstrip(":"),
+        line = line.strip()
+
+        # Detect topic titles (lines starting with "Title:")
+        if line.startswith("Title:"):
+            if current_topic:
+                topics.append(current_topic)
+            current_topic = {
+                "id": len(topics) + 1,
+                "title": line.replace("Title:", "").strip(),
                 "resources": [],
             }
-        # Detect resources (lines starting with '-')
-        elif line.strip().startswith("-"):
-            resource = line.strip().lstrip("- ").strip()
-            resource_type = "Written"  # Default type
-            duration = "30 min"  # Default duration
-            if "video" in resource.lower():
-                resource_type = "Video"
-            elif "exercise" in resource.lower():
-                resource_type = "Exercises"
-            elif "project" in resource.lower():
-                resource_type = "Project"
-            current_phase["resources"].append({
-                "id": f"r{len(current_phase['resources']) + 1}",
-                "title": resource,
-                "type": resource_type,
-                "duration": duration,
-            })
+        # Detect resources (lines starting with a resource title and indented)
+        elif line and not line.startswith("**") and current_topic:
+            # Extract resource details
+            if "(" in line and ")" in line:
+                resource = line.split("(")[0].strip()
+                type_duration = line.split("(")[1].rstrip(")").strip()
+                type_duration_parts = type_duration.split(", Duration:")
+                if len(type_duration_parts) == 2:
+                    resource_type = type_duration_parts[0].replace("Type:", "").strip()
+                    duration = type_duration_parts[1].strip()
+                    current_topic["resources"].append({
+                        "id": f"r{len(current_topic['resources']) + 1}",
+                        "title": resource,
+                        "type": resource_type,
+                        "duration": duration,
+                    })
     
-    if current_phase:
-        phases.append(current_phase)
+    if current_topic:
+        topics.append(current_topic)
     
-    return phases
+    return topics
 
 def create_calendar_events(phases, timeCommitment, studyDays, studyTime):
     """
@@ -165,19 +160,15 @@ def create_calendar_events(phases, timeCommitment, studyDays, studyTime):
                 
                 # Add event to Google Calendar
                 event = service.events().insert(calendarId="primary", body=event).execute()
-                print(f"Event created: {event.get('htmlLink')}")
                 
                 # Update current date
                 current_date += timedelta(days=1)  # Move to the next day
                 current_date = current_date.replace(hour=int(studyTime.split(":")[0]), minute=int(studyTime.split(":")[1]))  # Reset to user's preferred time
                 event_count += 1
-        
-        print(f"\nTotal {event_count} events created in Google Calendar.")
     except Exception as e:
         print(f"Error: {e}")
         print("Make sure the Google Calendar API is enabled in your Google Cloud project.")
         print("Enable it by visiting: https://console.developers.google.com/apis/api/calendar-json.googleapis.com/overview?project=651618431959")
-
 def main():
     """
     Main function to run the script.
@@ -188,11 +179,24 @@ def main():
         exit(1)
     
     # Parse input data
-    input_data = json.loads(sys.argv[1])
+    try:
+        input_data = json.loads(sys.argv[1])
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON input. {e}")
+        print("Example of valid input: '{\"topic\": \"Python Programming\", \"timeCommitment\": \"20\", \"studyDays\": \"5\", \"studyTime\": \"10:00\"}'")
+        exit(1)
+    
+    # Extract required fields
     topic = input_data.get("topic")
     timeCommitment = input_data.get("timeCommitment")
     studyDays = input_data.get("studyDays")
     studyTime = input_data.get("studyTime")
+    
+    # Validate required fields
+    if not all([topic, timeCommitment, studyDays, studyTime]):
+        print("Error: Missing required fields in input data.")
+        print("Required fields: topic, timeCommitment, studyDays, studyTime")
+        exit(1)
     
     # Step 1: Generate the roadmap
     roadmap = generate_roadmap(topic, timeCommitment, studyDays)
@@ -204,7 +208,7 @@ def main():
     create_calendar_events(phases, timeCommitment, studyDays, studyTime)
     
     # Return the structured roadmap as JSON
-    print(json.dumps(phases))
+    print(json.dumps(phases, indent=4))
 
 if __name__ == "__main__":
     main()

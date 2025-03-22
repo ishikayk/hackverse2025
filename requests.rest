@@ -6,7 +6,7 @@ POST http://localhost:8080/generate-roadmap
 Content-Type: application/json
 
 {
-  "topic": "Python",
+  "topic": "Tap Dancing",
   "timeCommitment": "10",
   "studyDays": "5",
   "studyTime": "18:00"
