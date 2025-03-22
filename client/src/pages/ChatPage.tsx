@@ -12,7 +12,6 @@ const ChatPage: React.FC = () => {
 
   const handleSendMessage = async () => {
     if (inputText.trim() && roadmap) {
-      // Add the user's message to the chat
       setMessages([...messages, { text: inputText, isUser: true }]);
       setInputText("");
 
@@ -45,7 +44,7 @@ const ChatPage: React.FC = () => {
           { text: "Sorry, something went wrong. Please try again.", isUser: false },
         ]);
       } finally {
-        setIsLoading(false); // Stop loading
+        setIsLoading(false); 
       }
     }
   };

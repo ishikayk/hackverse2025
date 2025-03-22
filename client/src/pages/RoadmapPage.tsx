@@ -5,11 +5,7 @@ import Roadmap from "../components/Roadmap.tsx";
 import Progress from "../components/Progress.tsx";
 import { Topic } from "../types";
 
-interface RoadmapPageProps {
-  heading: string;
-}
-
-const RoadmapPage: React.FC<RoadmapPageProps> = ({heading}) => {
+const RoadmapPage: React.FC = () => {
   const location = useLocation();
   console.log(location.state?.responseData); 
   const roadmapData = location.state?.responseData?.result; 
@@ -89,24 +85,23 @@ const RoadmapPage: React.FC<RoadmapPageProps> = ({heading}) => {
     <div className="w-screen h-screen flex">
       <div className="fixed top-25 w-full bg-zinc-100 z-40">
         <h2 className="text-4xl font-bold text-center py-4">
-          Your Personalized {`Cybersecurity`} Roadmap
+          Your Personalized Roadmap 
         </h2>
         <button
           onClick={() => navigate('/chat', { state: { roadmap: roadmapData } })}
-          className="bg-gradient-to-br from-rose-500 to-pink-400 hover:bg-gradient-to-br hover:from-rose-700 hover:to-pink-600 text-white px-4 py-2 w-[8rem] ml-[2rem] rounded-lg font-medium transition-colors fixed top-24"
+          className="bg-gradient-to-br from-rose-500 to-pink-400 hover:bg-gradient-to-br hover:from-rose-700 hover:to-pink-600 text-white px-8 py-4 w-[12rem] h-[4rem] ml-[2rem] rounded-lg font-medium transition-colors fixed top-24 flex justify-center items-center gap-2"
         >
           Ask a Doubt
           <IconSparkles size={20} />
         </button>
       </div>
 
-      {/* Scrollable Roadmap */}
       <div className="flex-1 overflow-y-auto mt-20 pt-4 pl-8">
         <Roadmap topics={topicsWithIcons} />
         <div className="grid place-items-center">
           <button
             onClick={() => { navigate("/quiz", { state: { roadmapData } }) }}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-lg font-medium flex items-center gap-2"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-lg font-medium fixed bottom-8 right-[18rem] z-50"
           >
             Take Final Quiz
           </button>
@@ -114,11 +109,11 @@ const RoadmapPage: React.FC<RoadmapPageProps> = ({heading}) => {
       </div>
 
       {/* Progress Section */}
-      <div className="w-1/3 fixed top-24 right-0 h-screen pt-8 pr-8">
+      <div className="w-1/3 fixed right-0 h-screen pt-8 pr-8">
         <Progress />
       </div>
     </div>
   );
 };
 
-export default RoadmapPage;   
+export default RoadmapPage;

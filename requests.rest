@@ -112,7 +112,7 @@ Content-Type: application/json
   ]
 }
 
-### 2. Submit Quiz Answers
+###  Submit Quiz Answers
 POST http://localhost:8080/check-answers
 Content-Type: application/json
 

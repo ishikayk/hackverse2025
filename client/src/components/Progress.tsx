@@ -8,7 +8,7 @@ const Progress: React.FC = () => {
   const stats: Stats = { progress: 65, streak: 7, timeInvested: 24 }; //dynamic data?
 
   return (
-    <div className="w-1/3 fixed top-[10rem] right-24 h-screen pt-8">
+    <div className="w-1/3 fixed top-[8rem] right-24 h-screen pt-8">
       {/* Progress Content */}
       <div className="bg-zinc-50 p-8 rounded-xl shadow-lg">
         {/* Stats Section */}

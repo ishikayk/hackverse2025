@@ -58,14 +58,13 @@ const Quiz: React.FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Data from server:", data); // Debugging
+        console.log("Data from server:", data); 
         if (data.error) {
           setError(data.error);
           setIsLoading(false);
           return;
         }
 
-        // Extract questions and answers from the result object
         const { questions, answers } = data.result;
 
         // Validate data structure

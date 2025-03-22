@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { IconUser } from '@tabler/icons-react';
 
-/* 
-interface NavigationProps {
-  isAuthenticated: boolean;
-  userProfilePic?: string; 
-}
-*/
 
 const Navigation: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
