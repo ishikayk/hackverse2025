@@ -1,14 +1,9 @@
-# quiz.py
-
 import google.generativeai as genai
 import re
 from fuzzywuzzy import fuzz
-import os
-from dotenv import load_dotenv
 
-load_dotenv('.env.local')
-
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+# Replace with your actual API key for Gemini
+GEMINI_API_KEY = " "
 
 def load_roadmap():
     """
@@ -44,6 +39,9 @@ def parse_quiz_response(response):
 def generate_quiz(roadmap):
     """
     Generate a quiz using the Gemini API.
+    Returns:
+        - questions_dict: Dictionary with question IDs and questions.
+        - answers_dict: Dictionary with question IDs and expected answers.
     """
     genai.configure(api_key=GEMINI_API_KEY)
     
@@ -53,7 +51,7 @@ def generate_quiz(roadmap):
     {roadmap}
     
     **Quiz Requirements:**
-    - The quiz should have 30 questions.
+    - The quiz should have 5 questions.
     - All questions should be short-answer questions.
     - For each question, provide the correct answer.
     
@@ -68,25 +66,18 @@ def generate_quiz(roadmap):
         
         # Parse the response to extract questions and answers
         quiz = parse_quiz_response(response.text.strip())
-        return quiz
+        
+        # Create dictionaries for questions and answers
+        questions_dict = {}
+        answers_dict = {}
+        
+        for i, q in enumerate(quiz):
+            questions_dict[i+1] = q["question"]  # Question ID starts from 1
+            answers_dict[i+1] = q["answer"]
+        
+        return questions_dict, answers_dict
     except Exception as e:
         return f"Error: Unable to generate quiz. {e}"
-
-def take_quiz(quiz):
-    """
-    Allow the user to take the quiz.
-    """
-    print("\n=== Quiz ===")
-    user_answers = []
-    
-    for i, question in enumerate(quiz):
-        print(f"\nQuestion {i+1}: {question['question']}")
-        user_answer = input("Your answer: ").strip()
-        user_answers.append(user_answer)
-    
-    print("\nQuiz completed!")
-    return user_answers
-
 
 def evaluate_answer(user_answer, correct_answer):
     """
@@ -140,16 +131,19 @@ def calculate_tokens_granted(final_score):
     else:
         return 0
 
-def evaluate_quiz(quiz, user_answers):
+def evaluate_quiz(answers_dict, user_answers_dict):
     """
     Evaluate the user's answers and provide feedback.
+    Returns:
+        - final_score: The user's final score out of 100.
+        - tokens_granted: The number of tokens granted.
+        - feedback: List of feedback for each question.
     """
     score = 0
     feedback = []
     
-    for i, question in enumerate(quiz):
-        user_answer = user_answers[i]
-        correct_answer = question["answer"]
+    for q_id, user_answer in user_answers_dict.items():
+        correct_answer = answers_dict.get(q_id, "")
         
         # Evaluate the answer
         answer_score = evaluate_answer(user_answer, correct_answer)
@@ -157,31 +151,24 @@ def evaluate_quiz(quiz, user_answers):
         
         # Provide feedback
         if answer_score == 1.0:
-            feedback.append(f"Question {i+1}: Correct!")
+            feedback.append(f"Question {q_id}: Correct!")
         elif answer_score > 0:
-            feedback.append(f"Question {i+1}: Partially correct. You scored {answer_score * 100:.0f}%. The correct answer is: {correct_answer}")
+            feedback.append(f"Question {q_id}: Partially correct. You scored {answer_score * 100:.0f}%. The correct answer is: {correct_answer}")
         else:
-            feedback.append(f"Question {i+1}: Incorrect. The correct answer is: {correct_answer}")
+            feedback.append(f"Question {q_id}: Incorrect. The correct answer is: {correct_answer}")
     
     # Calculate the final score out of 100
-    total_questions = len(quiz)
+    total_questions = len(answers_dict)
     final_score = (score / total_questions) * 100
     
     # Calculate tokens granted
     tokens_granted = calculate_tokens_granted(final_score)
     
-    # Display results
-    print("\n=== Quiz Results ===")
-    print(f"Your score: {final_score:.2f}/100")
-    print(f"Tokens granted: {tokens_granted}")
-    for fb in feedback:
-        print(fb)
-    
-    return tokens_granted
+    return final_score, tokens_granted, feedback
 
 def main():
     """
-    Main function to run the quiz.
+    Main function to demonstrate the quiz generation and evaluation.
     """
     # Step 1: Load the roadmap
     roadmap = load_roadmap()
@@ -191,19 +178,42 @@ def main():
     
     # Step 2: Generate the quiz
     print("\nGenerating quiz...\n")
-    quiz = generate_quiz(roadmap)
-    if isinstance(quiz, str):  # If an error occurred
-        print(quiz)
+    questions_dict, answers_dict = generate_quiz(roadmap)
+    if isinstance(questions_dict, str):  # If an error occurred
+        print(questions_dict)
         return
     
-    # Step 3: Take the quiz
-    user_answers = take_quiz(quiz)
+    # Step 3: Display the generated questions and expected answers
+    print("=== Questions Dictionary ===")
+    for q_id, question in questions_dict.items():
+        print(f"{q_id}: {question}")
     
-    # Step 4: Evaluate the quiz
-    tokens_granted = evaluate_quiz(quiz, user_answers)
+    print("\n=== Expected Answers Dictionary ===")
+    for q_id, answer in answers_dict.items():
+        print(f"{q_id}: {answer}")
     
-    # Step 5: Use tokens_granted as needed
-    print(f"\nYou have earned {tokens_granted} tokens!")
+    # Step 4: Simulate user answers (for demonstration)
+    user_answers_dict = {
+        1: "int, float, str",
+        2: "if, for",
+        3: "To organize code",
+        4: "Object Oriented Programming",
+        5: "Pandas"
+    }
+    
+    print("\n=== Simulated User Answers ===")
+    for q_id, answer in user_answers_dict.items():
+        print(f"{q_id}: {answer}")
+    
+    # Step 5: Evaluate the quiz
+    final_score, tokens_granted, feedback = evaluate_quiz(answers_dict, user_answers_dict)
+    
+    # Step 6: Display results
+    print("\n=== Quiz Results ===")
+    print(f"Your score: {final_score:.2f}/100")
+    print(f"Tokens granted: {tokens_granted}")
+    for fb in feedback:
+        print(fb)
 
 if __name__ == "__main__":
     main()
