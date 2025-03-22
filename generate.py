@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 load_dotenv('.env.local')
 
-GEMINI_API_KEY = os.getenv('VITE_API_KEY')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 # Google Calendar API scopes
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
@@ -24,7 +24,6 @@ def authenticate_google_calendar():
     # The file token.json stores the user's access and refresh tokens.
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    # If there are no valid credentials, prompt the user to log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -62,6 +61,7 @@ def generate_roadmap(topic, timeCommitment, studyDays):
     **Constraints:**
     - The course must last between 6 to 8 weeks.
     - The total study hours must be between {int(timeCommitment) * 6} and {int(timeCommitment) * 8} hours.
+    - Do not deviate from the format below
     - 
         **Output Format:**
         - Each topic should have a title and a list of resources.

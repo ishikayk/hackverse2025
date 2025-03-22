@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { IconUser } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
 
 /* 
 interface NavigationProps {
@@ -13,7 +12,6 @@ interface NavigationProps {
 const Navigation: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const userProfilePic = "https://avatar.iran.liara.run/public/81";
-  const navigate = useNavigate();
   
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -23,9 +21,6 @@ const Navigation: React.FC = () => {
             <NavLink to="/" className="text-xl font-bold text-blue-600">
               BlockSentinels
             </NavLink>
-              <button onClick={() => navigate('/chat')} className="bg-gradient-to-l from-green-400 to-cyan-500 hover:bg-purple-600 text-white px-3 py-3 ml-5 rounded-lg font-medium transition-colors flex items-center gap-2">
-                Ask a Doubt
-              </button>
           </div>
 
           <div className="flex items-center">

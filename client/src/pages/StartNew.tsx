@@ -21,9 +21,8 @@ const StartNew: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Show loading screen
+    setLoading(true); 
 
-    // Prepare the data to send to the API
     const formData = {
       topic,
       timeCommitment,

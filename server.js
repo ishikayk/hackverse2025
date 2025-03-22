@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { spawn } = require('child_process');
-const { log } = require('console');
 
 const app = express();
 const port = 8080;
@@ -10,12 +9,12 @@ const port = 8080;
 app.use(cors());
 app.use(bodyParser.json());
 
-//endpoint to generate roadmap
+// Endpoint to generate roadmap
 app.post('/generate-roadmap', (req, res) => {
   const formData = req.body;
   const pythonProcess = spawn('python3', ['generate.py', JSON.stringify(formData)]);
-  console.log("Script is running...");
-  
+  console.log('Script is running...');
+
   let result = '';
   let error = '';
 
@@ -35,9 +34,38 @@ app.post('/generate-roadmap', (req, res) => {
   });
 });
 
-//idk a checker endpoint
+// Endpoint to ask the chatbot
+app.post('/ask-chatbot', (req, res) => {
+  const { question, roadmap } = req.body;
+
+  if (!question || !roadmap) {
+    return res.status(400).json({ error: 'Both "question" and "roadmap" are required.' });
+  }
+
+  const pythonProcess = spawn('python3', ['chatbot.py', question, JSON.stringify(roadmap)]);
+
+  let result = '';
+  let error = '';
+
+  pythonProcess.stdout.on('data', (data) => {
+    result += data.toString();
+  });
+
+  pythonProcess.stderr.on('data', (data) => {
+    error += data.toString();
+  });
+
+  pythonProcess.on('close', (code) => {
+    if (code !== 0) {
+      return res.status(500).json({ error: `Python script failed: ${error}` });
+    }
+    res.json({ response: result.trim() });
+  });
+});
+
+// Checker endpoint
 app.get('/check', (req, res) => {
-    res.send('Seems to be working');
+  res.send('Seems to be working');
 });
 
 // Start the server

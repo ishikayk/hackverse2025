@@ -3,9 +3,12 @@
 import google.generativeai as genai
 import re
 from fuzzywuzzy import fuzz
+import os
+from dotenv import load_dotenv
 
-# Replace with your actual API key for Gemini
-GEMINI_API_KEY = "AIzaSyDzmNv7kfxd8JBS3jra5HfpxgOG8dnesQI"
+load_dotenv('.env.local')
+
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 def load_roadmap():
     """

@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { IconChartBar, IconAward, IconClock, IconMessage } from "@tabler/icons-react";
-import { Stats, Achievements } from "../types";
+import React from "react";
+import { IconChartBar, IconAward, IconClock } from "@tabler/icons-react";
+import { Stats } from "../types";
 
 
 const Progress: React.FC = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false); // State to control Chat modal visibility
-  
 
   const stats: Stats = { progress: 65, streak: 7, timeInvested: 24 }; //dynamic data?
 
   return (
-    <div className="w-1/3 fixed top-1/7 right-24 h-screen pt-8">
+    <div className="w-1/3 fixed top-[10rem] right-24 h-screen pt-8">
       {/* Progress Content */}
       <div className="bg-zinc-50 p-8 rounded-xl shadow-lg">
         {/* Stats Section */}
@@ -51,14 +49,6 @@ const Progress: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Chatbot Button */}
-      <button
-        onClick={() => setIsChatOpen(true)}
-        className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 flex flex-row"
-      >
-        <IconMessage size={24} /><p className="ml-2">Ask a Doubt</p>
-      </button>
     </div>
   );
 };

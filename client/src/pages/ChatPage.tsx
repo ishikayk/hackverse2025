@@ -1,22 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { IconMessage, IconSend, IconHome, IconSettings, IconUser, IconLogout } from "@tabler/icons-react";
 
 const ChatPage: React.FC = () => {
+  const location = useLocation();
+  const roadmap = location.state?.roadmap; // Access roadmap data from state
+
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([]);
   const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Loading state for API requests
 
-  const handleSendMessage = () => {
-    if (inputText.trim()) {
+  const handleSendMessage = async () => {
+    if (inputText.trim() && roadmap) {
+      // Add the user's message to the chat
       setMessages([...messages, { text: inputText, isUser: true }]);
       setInputText("");
 
-      // Simulate a bot response
-      setTimeout(() => {
+      setIsLoading(true); 
+      try {
+        const response = await fetch("http://localhost:8080/ask-chatbot", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question: inputText,
+            roadmap: roadmap,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch chatbot response");
+        }
+
+        const data = await response.json();
         setMessages((prevMessages) => [
           ...prevMessages,
-          { text: "I'm not functional yet!", isUser: false },
+          { text: data.response, isUser: false },
         ]);
-      }, 1000);
+      } catch (error) {
+        console.error("Error fetching chatbot response:", error);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: "Sorry, something went wrong. Please try again.", isUser: false },
+        ]);
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
     }
   };
 
@@ -78,6 +108,13 @@ const ChatPage: React.FC = () => {
               </div>
             </div>
           ))}
+          {isLoading && (
+            <div className="flex justify-start mb-4">
+              <div className="max-w-[75%] p-4 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
+                <p className="text-sm">Typing...</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Input Area */}
@@ -90,10 +127,12 @@ const ChatPage: React.FC = () => {
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               placeholder="Type a message..."
               className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              disabled={isLoading} 
             />
             <button
               onClick={handleSendMessage}
               className="bg-gradient-to-l from-green-400 to-cyan-500 text-white p-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+              disabled={isLoading} 
             >
               <IconSend size={20} />
             </button>

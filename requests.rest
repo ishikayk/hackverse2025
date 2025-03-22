@@ -22,3 +22,54 @@ Content-Type: application/json
   "studyDays": "",
   "studyTime": ""
 }
+
+### Test ask-chatbot endpoint
+POST http://localhost:8080/ask-chatbot
+Content-Type: application/json
+
+{
+  "question": "What is the first topic in the roadmap?",
+  "roadmap": [
+    {
+      "id": 1,
+      "title": "Introduction to Python",
+      "resources": [
+        {
+          "id": "r1",
+          "title": "Python Basics",
+          "type": "Video",
+          "duration": "32 min"
+        }
+      ]
+    }
+  ]
+}
+
+### ask-chatbot endpoint with missing question
+POST http://localhost:8080/ask-chatbot
+Content-Type: application/json
+
+{
+  "roadmap": [
+    {
+      "id": 1,
+      "title": "Introduction to Python",
+      "resources": [
+        {
+          "id": "r1",
+          "title": "Python Basics",
+          "type": "Video",
+          "duration": "32 min"
+        }
+      ]
+    }
+  ]
+}
+
+### ask-chatbot endpoint with missing roadmap
+POST http://localhost:8080/ask-chatbot
+Content-Type: application/json
+
+{
+  "question": "What is the first topic in the roadmap?"
+}
