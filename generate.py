@@ -62,7 +62,7 @@ def generate_roadmap(topic, timeCommitment, studyDays):
     - The course must last between 6 to 8 weeks.
     - The total study hours must be between {int(timeCommitment) * 6} and {int(timeCommitment) * 8} hours.
     - Do not deviate from the format below
-    - 
+    - Do not give Examples
         **Output Format:**
         - Each topic should have a title and a list of resources.
         - Resources should include a title, type (e.g., Video, Written, Exercises, Project), and duration.

@@ -69,8 +69,7 @@ def check_answers(expected, user):
     final_score = (score / total_questions) * 100
     
     return {
-        "score": final_score,
-        "feedback": feedback
+        "score": final_score
     }
 
 if __name__ == "__main__":

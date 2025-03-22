@@ -30,7 +30,7 @@ interface Roadmap {
 
 const Quiz: React.FC = () => {
   const location = useLocation();
-  const roadmap = location.state?.roadmap as Roadmap[]; // Get roadmap from state
+  const roadmap = location.state?.roadmapData as Roadmap[];
 
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [expectedAns, setExpectedAns] = useState<ExpAns[]>([]);
@@ -49,7 +49,7 @@ const Quiz: React.FC = () => {
     }
 
     // Fetch questions from the server
-    fetch("http://localhost:8080/get-quest", {
+    fetch("http://localhost:8080/generate-quiz", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,17 +58,30 @@ const Quiz: React.FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("Data from server:", data); // Debugging
         if (data.error) {
           setError(data.error);
           setIsLoading(false);
           return;
         }
-        setQuizQuestions(data.questions.map((q: string, index: number) => ({ id: index + 1, question: q })));
-        setExpectedAns(data.answers.map((a: string, index: number) => ({ id: index + 1, answer: a })));
-        setTimeLeft(data.questions.length * 2 * 60); // Set timer to number of questions * 2 minutes
+
+        // Extract questions and answers from the result object
+        const { questions, answers } = data.result;
+
+        // Validate data structure
+        if (!questions || !Array.isArray(questions) || !answers || !Array.isArray(answers)) {
+          setError("Invalid data format received from the server.");
+          setIsLoading(false);
+          return;
+        }
+
+        setQuizQuestions(questions.map((q: string, index: number) => ({ id: index + 1, question: q })));
+        setExpectedAns(answers.map((a: string, index: number) => ({ id: index + 1, answer: a })));
+        setTimeLeft(questions.length * 2 * 60); // Set timer to number of questions * 2 minutes
         setIsLoading(false);
       })
       .catch((error) => {
+        console.error("Fetch error:", error); // Debugging
         setError("Failed to fetch questions. Please try again later.");
         setIsLoading(false);
       });
@@ -105,7 +118,7 @@ const Quiz: React.FC = () => {
       };
 
       try {
-        const response = await fetch("http://localhost:8080/get-result", {
+        const response = await fetch("http://localhost:8080/check-answers", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -118,9 +131,10 @@ const Quiz: React.FC = () => {
         }
 
         const resultData = await response.json();
-        setResult(resultData.result); // Assuming the server returns { result: { score, feedback } }
+        console.log("Result data:", resultData); // Debugging
+        setResult(resultData.result);
       } catch (error) {
-        console.error("Error submitting quiz:", error);
+        console.error("Submission error:", error); // Debugging
         setError("An error occurred while submitting the quiz.");
       }
     }
@@ -172,13 +186,15 @@ const Quiz: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 w-2xl">
-      <form onSubmit={handleSubmit} className="mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Answer all questions to the best of your Ability</h1>
+
+<h1 className="text-3xl font-bold mb-6 text-center">Answer all questions to the best of your Ability</h1>
         <div className="text-center mb-4">
-          <p className="text-lg font-semibold">Time Left: {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? `0${timeLeft % 60}` : timeLeft % 60}</p>
+          <p className="text-xl font-semibold text-red-500">Time Left: {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? `0${timeLeft % 60}` : timeLeft % 60}</p>
         </div>
+
+        <p className="text-xl font-semibold mb-32 mt-32">{currentQuestion.question}</p>
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
         <div key={currentQuestion.id} className="mb-6">
-          <p className="text-lg font-semibold mb-2">{currentQuestion.question}</p>
           <input
             type="text"
             value={answers[currentQuestion.id] || ""}
@@ -189,7 +205,7 @@ const Quiz: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {currentQuestionIndex < quizQuestions.length - 1 ? "Next Question" : "Finish Test"}
         </button>

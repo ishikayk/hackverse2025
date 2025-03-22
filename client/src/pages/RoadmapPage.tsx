@@ -103,15 +103,15 @@ const RoadmapPage: React.FC<RoadmapPageProps> = ({heading}) => {
       {/* Scrollable Roadmap */}
       <div className="flex-1 overflow-y-auto mt-20 pt-4 pl-8">
         <Roadmap topics={topicsWithIcons} />
-
-        <button
-          onClick={() => {navigate("/quiz", { state: { roadmapData } })}}
-          className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto"
-        >
-          Take Final Quiz
-        </button>
+        <div className="grid place-items-center">
+          <button
+            onClick={() => { navigate("/quiz", { state: { roadmapData } }) }}
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-lg font-medium flex items-center gap-2"
+          >
+            Take Final Quiz
+          </button>
+        </div>
       </div>
-
 
       {/* Progress Section */}
       <div className="w-1/3 fixed top-24 right-0 h-screen pt-8 pr-8">
