@@ -13,6 +13,8 @@ interface NavigationProps {
 const Navigation: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const userProfilePic = "https://avatar.iran.liara.run/public/81";
+  const navigate = useNavigate();
+  
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
       <div className="mx-0 px-4 sm:px-6 lg:px-8">
@@ -21,7 +23,7 @@ const Navigation: React.FC = () => {
             <NavLink to="/" className="text-xl font-bold text-blue-600">
               BlockSentinels
             </NavLink>
-              <button className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
+              <button onClick={() => navigate('/chat')} className="bg-gradient-to-l from-green-400 to-cyan-500 hover:bg-purple-600 text-white px-3 py-3 ml-5 rounded-lg font-medium transition-colors flex items-center gap-2">
                 Ask a Doubt
               </button>
           </div>
@@ -33,9 +35,9 @@ const Navigation: React.FC = () => {
                   <img
                     src={userProfilePic}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full border-2 border-blue-100"
+                    className="w-10 h-10 rounded-full border-2 border-rose-100"
                   />
-                  <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full">
+                  <div className="absolute bottom-0 right-0 bg-emerald-500 text-white p-1 rounded-full">
                     <IconUser size={12} />
                   </div>
                 </div>
