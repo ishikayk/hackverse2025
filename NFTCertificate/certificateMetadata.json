@@ -1,0 +1,23 @@
+{
+  "name": "Blockchain Development Certificate",
+  "description": "This NFT serves as proof of course completion in Blockchain Development.",
+  "image": "ipfs://bafybeievoziqdk2gltzjnnc2zovfhlw2jjwwezq7rd27ebyoiucggu7yfa",  
+  "attributes": [
+    {
+      "trait_type": "Recipient",
+      "value": "0x636BE2331539475FFc48a4FB2DBFe97d9123DaC0"
+    },
+    {
+      "trait_type": "Course ID",
+      "value": "12345"
+    },
+    {
+      "trait_type": "Issued By",
+      "value": "BlockSentinels"
+    },
+    {
+      "trait_type": "Date",
+      "value": "2025-03-21"
+    }
+  ]
+}
