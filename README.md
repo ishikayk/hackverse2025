@@ -1,4 +1,4 @@
-# CertiFi
+![image](https://github.com/user-attachments/assets/e38ba262-c4f8-4f03-b2de-ed33a9f25b38)# CertiFi
 
 CertiFi is a Blockchain powered AI Tutoring and Learning platform, built for individuals to learn their way, in their own time. Made over 24 hours during HackVerse 2025.
 
@@ -21,6 +21,13 @@ Features
 
 - Users connect their MetaMask wallet to access the platform. All interactions are secured using blockchain technology.
 
+## Screenshots
+![image](https://github.com/user-attachments/assets/ee0264bf-2ccd-4af7-9367-a01e4e3c1058)
+
+![image](https://github.com/user-attachments/assets/cd259cc4-1828-4ad2-ab40-f736ea27c5b5)
+
+## Vision of the Project
+
 ## Technologies used
 Technologies Used
 
@@ -41,3 +48,11 @@ Technologies Used
   - Smart Contracts (Solidity)
 
   - MetaMask (Wallet Integration)
+
+## Contact Us
+
+You can contact us at:
+[Ayush Gayakwad](mailto:)
+[Pruthviraj Gowda](mailto:ishikasingh0214@gmail.com)
+[Ishika Singh](mailto:vpruthvigowda@gmail.com)
+[Nilay Sabnis](mailto:nilay.sabnis05@gmail.com)
