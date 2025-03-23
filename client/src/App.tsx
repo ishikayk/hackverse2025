@@ -12,7 +12,7 @@ import Chat from './pages/ChatPage';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-zinc-100"  >
+      <div className="min-h-screen bg-zinc-200"  >
         <div>
           <Navigation />
           

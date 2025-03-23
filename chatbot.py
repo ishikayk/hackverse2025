@@ -15,7 +15,7 @@ class Chatbot:
         Initialize the chatbot with the Gemini API key.
         """
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('models/gemini-1.5-flash')
+        self.model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
 
     def respond(self, question, roadmap):
         """

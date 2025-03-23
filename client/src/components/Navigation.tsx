@@ -5,7 +5,6 @@ import { IconUser } from '@tabler/icons-react';
 
 const Navigation: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const userProfilePic = "https://avatar.iran.liara.run/public/81";
   
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -22,9 +21,13 @@ const Navigation: React.FC = () => {
               <NavLink to="/profile" className="flex items-center space-x-2">
                 <div className="relative">
                   <img
-                    src={userProfilePic}
-                    alt="Profile"
                     className="w-10 h-10 rounded-full border-2 border-rose-100"
+                    style={{
+                      backgroundImage: "url(src/assets/pfp-img.jpg)",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat"
+                    }}
                   />
                   <div className="absolute bottom-0 right-0 bg-emerald-500 text-white p-1 rounded-full">
                     <IconUser size={12} />

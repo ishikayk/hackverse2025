@@ -75,7 +75,7 @@ def generate_roadmap(topic, timeCommitment, studyDays):
     
     try:
         # Use the gemini-1.5-pro-latest model
-        model = genai.GenerativeModel('models/gemini-1.5-flash')
+        model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
         response = model.generate_content(prompt)
     except Exception as e:
         # Handle errors

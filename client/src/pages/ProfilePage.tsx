@@ -17,7 +17,7 @@ const ProfilePage: React.FC = () => {
     learningHours: 120,
     rating: 4.7,
     memberSince: "2023",
-    avatar: "https://avatar.iran.liara.run/public/81" 
+    avatar: "client/src/assets/pfp-img.jpg",
   };
 
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const ProfilePage: React.FC = () => {
   const handleClaimRewards = async () => {
     const message = await claimRewards();
     setRewardMessage(message);
-    handleCheckBalance(); // Update balance after claiming rewards
+    handleCheckBalance(); 
   };
 
   return (
@@ -51,9 +51,13 @@ const ProfilePage: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
           <div className="relative">
             <img 
-              src={user.avatar}
-              alt="Profile"
               className="w-32 h-32 rounded-full border-4 border-purple-100"
+              style={{
+                backgroundImage: "url(src/assets/pfp-img.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat"
+              }}
             />
             <div className="absolute bottom-0 right-0 bg-purple-500 text-white p-2 rounded-full">
               <IconUser size={20} />
@@ -78,11 +82,11 @@ const ProfilePage: React.FC = () => {
 
         {/* Wallet Section */}
         <div className="mb-8">
-          <button onClick={handleConnectWallet} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+          <button onClick={handleConnectWallet} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mr-2">
             Connect Wallet
           </button>
           {walletAddress && <p className="mt-2">Wallet: {walletAddress}</p>}
-          <button onClick={handleCheckBalance} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mt-4">
+          <button onClick={handleCheckBalance} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mt-4 mr-2">
             Check Balance
           </button>
           {balance && <p className="mt-2">Your balance: {balance} EDU</p>}

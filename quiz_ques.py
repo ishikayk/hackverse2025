@@ -67,7 +67,7 @@ def generate_quiz(roadmap):
     """
     
     try:
-        model = genai.GenerativeModel('models/gemini-1.5-flash')
+        model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
         response = model.generate_content(prompt)
         
         # Parse the response to extract questions and answers

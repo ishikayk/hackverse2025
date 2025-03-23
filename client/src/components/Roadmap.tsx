@@ -28,7 +28,7 @@ const Roadmap: React.FC<RoadmapProps> = ({ topics }) => {
           <div key={topic.id} className="w-full flex flex-col items-center mb-8">
             {/* Connector */}
             {index !== 0 && (
-              <div className="w-1 h-16 bg-gray-200 rounded-full mb-4" />
+              <div className="w-1 h-16 bg-slate-100 rounded-full mb-4" />
             )}
 
             {/* Step Card */}
