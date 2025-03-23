@@ -1,8 +1,15 @@
-import React from 'react';
+// ProfilePage.tsx
+
+import React, { useState } from 'react';
 import { IconUser, IconSchool, IconCertificate, IconClock, IconStar } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { connectWallet, checkBalance, claimRewards } from './WalletUtils.ts';
 
 const ProfilePage: React.FC = () => {
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [balance, setBalance] = useState<string | null>(null);
+  const [rewardMessage, setRewardMessage] = useState<string | null>(null);
+
   const user = {
     name: "Sarah Johnson",
     email: "sarah@web3dev.com",
@@ -13,12 +20,30 @@ const ProfilePage: React.FC = () => {
     avatar: "https://avatar.iran.liara.run/public/81" 
   };
 
-    const navigate = useNavigate();
-  
-    const handleStart = () => {
-      navigate('/start');
-    };
-    
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    navigate('/start');
+  };
+
+  const handleConnectWallet = async () => {
+    const address = await connectWallet();
+    if (address) {
+      setWalletAddress(address);
+    }
+  };
+
+  const handleCheckBalance = async () => {
+    const balance = await checkBalance();
+    setBalance(balance);
+  };
+
+  const handleClaimRewards = async () => {
+    const message = await claimRewards();
+    setRewardMessage(message);
+    handleCheckBalance(); // Update balance after claiming rewards
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-8">
       <div className="bg-white rounded-xl shadow-lg p-8">
@@ -49,6 +74,22 @@ const ProfilePage: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Wallet Section */}
+        <div className="mb-8">
+          <button onClick={handleConnectWallet} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            Connect Wallet
+          </button>
+          {walletAddress && <p className="mt-2">Wallet: {walletAddress}</p>}
+          <button onClick={handleCheckBalance} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mt-4">
+            Check Balance
+          </button>
+          {balance && <p className="mt-2">Your balance: {balance} EDU</p>}
+          <button onClick={handleClaimRewards} className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mt-4">
+            Claim Rewards
+          </button>
+          {rewardMessage && <p className="mt-2">{rewardMessage}</p>}
         </div>
 
         {/* Stats Grid */}
