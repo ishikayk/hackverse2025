@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/e38ba262-c4f8-4f03-b2de-ed33a9f25b38)# CertiFi
+# CertiFi
 
 CertiFi is a Blockchain powered AI Tutoring and Learning platform, built for individuals to learn their way, in their own time. Made over 24 hours during HackVerse 2025.
 
