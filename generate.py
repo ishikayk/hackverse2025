@@ -61,7 +61,8 @@ def generate_roadmap(topic, timeCommitment, studyDays):
     **Constraints:**
     - The course must last between 6 to 8 weeks.
     - The total study hours must be between {int(timeCommitment) * 6} and {int(timeCommitment) * 8} hours.
-    - Do not deviate from the format below
+    - **Do not** deviate from the format below
+    - Make sure it is exactly like the format
     - Do not give Examples
         **Output Format:**
         - Each topic should have a title and a list of resources.
@@ -75,7 +76,7 @@ def generate_roadmap(topic, timeCommitment, studyDays):
     
     try:
         # Use the gemini-1.5-pro-latest model
-        model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
+        model = genai.GenerativeModel('models/gemini-1.5-flash')
         response = model.generate_content(prompt)
     except Exception as e:
         # Handle errors
@@ -95,7 +96,6 @@ def parse_roadmap(roadmap):
     for line in roadmap.split("\n"):
         line = line.strip()
 
-        # Detect topic titles (lines starting with "Title:")
         if line.startswith("Title:"):
             if current_topic:
                 topics.append(current_topic)

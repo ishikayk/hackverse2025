@@ -6,10 +6,10 @@ POST http://localhost:8080/generate-roadmap
 Content-Type: application/json
 
 {
-  "topic": "Tap Dancing",
-  "timeCommitment": "10",
-  "studyDays": "5",
-  "studyTime": "18:00"
+  "topic": "Singing",
+  "timeCommitment": "20",
+  "studyDays": "7",
+  "studyTime": "8:23"
 }
 
 ### Test ask-chatbot endpoint

@@ -22,7 +22,7 @@ export async function connectWallet(): Promise<string | null> {
                 }
                 throw new Error("Invalid response from MetaMask");
             })
-            .catch((error) => {
+            .catch((error: any) => {
                 console.error("Error requesting accounts:", error);
                 return [];
             });
