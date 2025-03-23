@@ -186,7 +186,7 @@ const Quiz: React.FC = () => {
       const signer = await provider.getSigner(); // Ensure signer is retrieved from provider
       const recipient = await signer.getAddress(); // Now `signer` should not be undefined
       const tokenURI = "ipfs://bafkreifsu7lwxu4o2mwdns6t6ci327slciq3rr3fptak46yzqeuywmz45e";
-      const courseId = roadmap[0]?.id?.toString() || "12345";
+      const courseId = Math.floor(10000 + Math.random() * 90000).toString();
 
       const transaction = await contract.mintCertificate(recipient, tokenURI, courseId);
       await transaction.wait();
