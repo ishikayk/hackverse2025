@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { ethers } from "ethers";
+import NFTCertificate from "../../NFTCertificate.json";
+
+const CONTRACT_ADDRESS = "0x737489CcFC57bC25391Ea1CA1c830388C1320267";
 
 interface QuizQuestion {
   id: number;
@@ -28,9 +32,17 @@ interface Roadmap {
   }[];
 }
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 const Quiz: React.FC = () => {
   const location = useLocation();
-  const roadmap = location.state?.roadmapData as Roadmap[];
+  const roadmap = location.state?.roadmapData as Roadmap[] || [];
+
+  const [status, setStatus] = useState(""); 
 
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [expectedAns, setExpectedAns] = useState<ExpAns[]>([]);
@@ -40,51 +52,75 @@ const Quiz: React.FC = () => {
   const [result, setResult] = useState<{ score: number; feedback: string[] } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [contract, setContract] = useState(null); // Store contract instance
 
   useEffect(() => {
-    if (!roadmap) {
-      setError("Roadmap not provided. Please go back and try again.");
-      setIsLoading(false);
+    if (!window.ethereum) {
+      setStatus("MetaMask is not installed.");
       return;
     }
 
-    // Fetch questions from the server
+    const initContract = async () => {
+      try {
+        if (!window.ethereum) {
+          throw new Error("MetaMask is not installed.");
+        }
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const provider = new ethers.BrowserProvider(window.ethereum); // Change Web3Provider to BrowserProvider
+        const signer = await provider.getSigner();
+        const contractInstance = new ethers.Contract(CONTRACT_ADDRESS, NFTCertificate.abi, signer);
+        setContract(contractInstance);
+      } catch (error) {
+        console.error("Contract Initialization Failed:", error);
+        setStatus("Failed to connect to the contract.");
+      }
+    };
+    
+    initContract();
+  }, []);
+
+  useEffect(() => {
+    if (!roadmap) {
+        setError("Roadmap not provided. Please go back and try again.");
+        setIsLoading(false);
+        return;
+    }
+
     fetch("http://localhost:8080/generate-quiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ roadmap }),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ roadmap }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Data from server:", data); 
-        if (data.error) {
-          setError(data.error);
-          setIsLoading(false);
-          return;
-        }
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.error) {
+                setError(data.error);
+                setIsLoading(false);
+                return;
+            }
 
-        const { questions, answers } = data.result;
+            // Ensure questions and answers are valid
+            const { questions, answers } = data.result || {};
+            if (!questions || !Array.isArray(questions) || !answers || !Array.isArray(answers)) {
+                setError("Invalid data format received from the server.");
+                setIsLoading(false);
+                return;
+            }
 
-        // Validate data structure
-        if (!questions || !Array.isArray(questions) || !answers || !Array.isArray(answers)) {
-          setError("Invalid data format received from the server.");
-          setIsLoading(false);
-          return;
-        }
+            setQuizQuestions(questions.map((q: string, index: number) => ({ id: index + 1, question: q })) || []);
+            setExpectedAns(answers.map((a: string, index: number) => ({ id: index + 1, answer: a })) || []);
+            setTimeLeft(questions.length * 2 * 60); // Timer
+            setIsLoading(false);
+        })
+        .catch((error) => {
+            console.error("Fetch error:", error);
+            setError("Failed to fetch questions. Please try again later.");
+            setIsLoading(false);
+        });
+}, [roadmap]);
 
-        setQuizQuestions(questions.map((q: string, index: number) => ({ id: index + 1, question: q })));
-        setExpectedAns(answers.map((a: string, index: number) => ({ id: index + 1, answer: a })));
-        setTimeLeft(questions.length * 2 * 60); // Set timer to number of questions * 2 minutes
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error); // Debugging
-        setError("Failed to fetch questions. Please try again later.");
-        setIsLoading(false);
-      });
-  }, [roadmap]);
 
   useEffect(() => {
     // Timer countdown
@@ -132,12 +168,35 @@ const Quiz: React.FC = () => {
         const resultData = await response.json();
         console.log("Result data:", resultData); // Debugging
         setResult(resultData.result);
+        if (resultData.result.score >= 10) {
+          mintNFT();
+        }
       } catch (error) {
         console.error("Submission error:", error); // Debugging
         setError("An error occurred while submitting the quiz.");
       }
     }
   };
+
+  async function mintNFT() {
+    if (!contract) return;
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner(); // Ensure signer is retrieved from provider
+      const recipient = await signer.getAddress(); // Now `signer` should not be undefined
+      const tokenURI = "ipfs://bafkreifsu7lwxu4o2mwdns6t6ci327slciq3rr3fptak46yzqeuywmz45e";
+      const courseId = roadmap[0]?.id?.toString() || "12345";
+
+      const transaction = await contract.mintCertificate(recipient, tokenURI, courseId);
+      await transaction.wait();
+
+      setStatus(`Certificate Minted! Transaction: ${transaction.hash}`);
+    } catch (error: any) {
+      console.error("Minting error:", error);
+      setStatus(`Error: ${error.message || "Minting failed"}`);
+    }
+  }
 
   // Render logic
   if (error) {
@@ -168,18 +227,24 @@ const Quiz: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-md text-center">
           <h2 className="text-xl font-bold text-green-600">Quiz Submitted!</h2>
           <p className="mt-2 text-gray-700">Your Score: {result.score}</p>
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold">Feedback:</h3>
-            <ul className="list-disc list-inside">
-              {result.feedback.map((fb, index) => (
-                <li key={index} className="mt-2 text-gray-700">{fb}</li>
-              ))}
-            </ul>
-          </div>
+          {result.feedback && Array.isArray(result.feedback) && result.feedback.length > 0 ? (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Feedback:</h3>
+              <ul className="list-disc list-inside">
+                {result.feedback.map((fb, index) => (
+                  <li key={index} className="mt-2 text-gray-700">{fb}</li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="mt-4 text-gray-700">No feedback available.</p>
+          )}
+
+          {status && <p className="mt-4 text-lg font-bold text-blue-600">{status}</p>}
         </div>
       </div>
     );
-  }
+}
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
