@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import HomePage from './pages/HomePage';
 import Quiz from './pages/QuizPage';
 import Chat from './pages/ChatPage';
+import ViewCertificates from './pages/ViewCertificates';
 //import Progress from './components/Progress';
 //import Resources from './components/Resources';
 
@@ -24,6 +25,7 @@ function App() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/view" element={<ViewCertificates />} />
             </Routes>
           </div>
         </div>
